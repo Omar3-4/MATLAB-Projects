@@ -16,7 +16,7 @@ The function `p2N` takes two arguments:
 **Example:**
 To find the polynomial equivalent for the sum of squares (p=2) up to N=10, run the following in your Command Window:
 ```matlab
-[polynomial_formula, total_sum] = p2N(2, 10);
+[polynomial_formula, total_sum] = p2N(2, 10)
 ```
 The function will output the exact symbolic polynomial expression as a function of N, along with the evaluated numeric sum.
 
