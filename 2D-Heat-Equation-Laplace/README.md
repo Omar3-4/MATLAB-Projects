@@ -27,6 +27,6 @@ Outputs:
 ### Example
 To simulate a 50x50 grid with boundaries set to 100 at the top, 0 at the bottom, 75 at the left, and 50 at the right, you can run:
 
-T = HeatDist(50, 100, 0, 50, 50);
+>> T = HeatDist(50, 100, 0, 50, 50);
 
-![Heat Distribution Plot](HeatDist plot.png)
+![Heat Distribution Plot](HeatDist%20plot.png)
