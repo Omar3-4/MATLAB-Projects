@@ -14,10 +14,15 @@ To use the function in MATLAB, call it with the following syntax:
 T = HeatDist(N, T_top, T_bottom, T_left, T_right)
 
 Inputs:
+
 1- N : The number of grid points along one side (determines the resolution of the square grid).
+
 2- T_top : Constant temperature at the top boundary.
+
 3- T_bottom : Constant temperature at the bottom boundary.
+
 4- T_left : Constant temperature at the left boundary.
+
 5- T_right : Constant temperature at the right boundary.
 
 Outputs:
