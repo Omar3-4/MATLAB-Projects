@@ -26,7 +26,9 @@ Inputs:
 5- T_right : Constant temperature at the right boundary.
 
 Outputs:
+
 1- T : A 2D matrix representing the calculated temperature at each grid point.
+
 2- Visual Plots: The function automatically generates a figure containing a 2D Temperature Distribution (Heatmap) and a 3D Surface Plot.
 
 ### Example
