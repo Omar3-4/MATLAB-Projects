@@ -59,6 +59,24 @@ For the tiny fraction of numbers that pass all three filters:
 4. If the sum equals `n`, it is a perfect number ✓
 
 ---
+## Visualizations & Performance Analysis
+
+![System Architecture](images/Perfect%20Numbers%20Problem.png)
+Figure 1: High-Level System Architecture. This flowchart illustrates the hybrid workload distribution between the CPU/RAM (Management & Validation) and the GPU (High-Speed Parallel Filtering). It highlights the Mathematical Sieve that prunes the search space by over 99.99% before heavy computation begins.
+
+![Sieve Efficiency](images/sieve%20efficiency.jpg)
+Figure 2: The "Needle in a Haystack" Reduction. A logarithmic visualization showing the efficiency of the multi-stage filtering process. The search space is compressed from a quadrillion ($10^{15}$) candidates down to just 7 confirmed matches, demonstrating the power of number-theoretic constraints in algorithmic optimization.
+
+![Computational Effort](images/effort.jpg)
+Figure 3: Computational Effort vs. Mathematical Magnitude. This graph tracks the search time (in seconds) against the numerical rank of perfect numbers. It highlights the "GPU Stress Peak" as the search range extends, showcasing the performance limits and the necessity of VRAM chunking.
+
+![Binary Visualization](images/Binary%20Visualization%20for%20PerfectN.png)
+Figure 4: Structural Symmetry of Perfect Numbers. A binary representation of the discovered numbers, visualizing the elegant bit-pattern $2^{p-1}(2^p-1)$ which defines all even perfect numbers.
+
+![Discovery Map](images/Discovery%20map.jpg)
+Figure 5: Distribution Map. A scatter plot showing the increasing "scarcity" of perfect numbers across the $10^{12}$ range, emphasizing their extreme rarity in the number system.
+
+---
 
 ## Requirements
 
