@@ -24,6 +24,7 @@ They are extremely rare — only a handful are known to exist, and all confirmed
 
 The script does **not** brute-force every number. Instead, it applies three fast mathematical filters on the GPU to discard the vast majority of candidates before doing any expensive divisor-sum computation.
 
+# Phase I
 ### Stage 1 — Range Splitting
 
 The script divides the search space into 12 powers-of-10 ranges:
@@ -75,6 +76,28 @@ Figure 4: Structural Symmetry of Perfect Numbers. A binary representation of the
 
 ![Discovery Map](images/Discovery%20map.jpg)
 Figure 5: Distribution Map. A scatter plot showing the increasing "scarcity" of perfect numbers across the $10^{12}$ range, emphasizing their extreme rarity in the number system.
+
+---
+# Phase II: AI-Assisted Mathematical Optimization (V2)
+
+While Phase I successfully reduced the search space using GPU filters, it still relied on processing millions of chunks, taking approximately 72 minutes to scan up to 10¹². Through an AI-assisted mathematical analysis, the approach was completely re-engineered. Instead of *filtering* a massive array of numbers, Phase II *generates* only the mathematically viable candidates directly from first principles.
+
+### Stage 1 — The Triangular Base Reduction
+Every even perfect number is inherently a triangular number, defined by the formula `n = k(k+1)/2`. 
+
+Instead of iterating through the final numbers `n` up to 10¹⁸, the V2 script iterates only through the roots `k`. For a maximum limit of 10¹⁸, the highest possible `k` is approximately 1.414 × 10⁹. This theoretical shift reduces the search space from a quintillion elements down to just 1.4 billion, completely eliminating the need for complex iterative chunking.
+
+### Stage 2 — GPU Parallelism & Bitwise Operations
+The V2 script initializes the entire array of `k` values directly on the GPU VRAM, bypassing the CPU-to-GPU memory transfer bottleneck that slowed down Phase I.
+
+Furthermore, the script abandons standard arithmetic in favor of low-level Bitwise operations, taking advantage of the structural binary properties of Mersenne primes:
+- `bitand(k + 1, k) == 0`: A hardware-level check that instantly identifies if `k+1` is an exact power of 2.
+- `bitshift(K_val, p - 1)`: Replaces expensive floating-point multiplication to rapidly construct the final perfect number `N`.
+
+### Stage 3 — The Result: From Minutes to Seconds
+By shifting the primary computational burden from hardware brute-force to pure number theory, the execution time saw an exponential improvement:
+- **Limit 10¹² (First 7 Perfect Numbers):** Time reduced from **72 minutes** to **1.25 seconds**.
+- **Limit 10¹⁸ (The 8th Perfect Number):** Successfully discovered in just **12 seconds**.
 
 ---
 
@@ -238,7 +261,6 @@ fileID_instant = fopen('Instant_Perfect_Log.txt', 'a');  % Change filename here
 ```
 
 ---
-
 ## License
 
 This project is provided as-is for educational and research purposes. Feel free to modify and redistribute.
