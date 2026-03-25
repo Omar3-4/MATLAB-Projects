@@ -23,3 +23,6 @@ The function will output the exact symbolic polynomial expression as a function 
 ## Requirements 
 - MATLAB
 - Symbolic Math Toolbox
+
+## License
+This project is licensed under the MIT License. You are free to use and modify it, provided that proper attribution is given to the original author (Omar Hussein) and any research or publication using this code must cite this repository.
