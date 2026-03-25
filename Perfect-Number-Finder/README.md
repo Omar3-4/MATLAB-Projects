@@ -99,6 +99,14 @@ By shifting the primary computational burden from hardware brute-force to pure n
 - **Limit 10¹² (First 7 Perfect Numbers):** Time reduced from **72 minutes** to **1.25 seconds**.
 - **Limit 10¹⁸ (The 8th Perfect Number):** Successfully discovered in just **12 seconds**.
 
+### Stage 4 — Advanced System Architecture (V2)
+
+![V2 System Architecture](images/v2_system_architecture.png)
+Figure 6: Advanced System Architecture for Phase II V2. This flowchart illustrates the re-engineered workload distribution, emphasizing direct generation from roots k instead of filtering n, followed by the powerful Mersenne-Lucas filter on the GPU. The entire generation and filtering pipeline is offloaded to CUDA cores, leaving only the tiny subset of rare candidates for final CPU verification, ensuring extreme-scale efficiency.
+
+![V2 Execution Output](images/v2_execution_output.png)
+Figure 7: MATLAB Command Window output from V2 showing the rapid discovery of the 8th Perfect Number (2,305,843,008,139,952,128) in just 12.36 seconds.
+
 ---
 
 ## Requirements
