@@ -270,5 +270,4 @@ fileID_instant = fopen('Instant_Perfect_Log.txt', 'a');  % Change filename here
 
 ---
 ## License
-
-This project is provided as-is for educational and research purposes. Feel free to modify and redistribute.
+This project is licensed under the MIT License. You are free to use and modify it, provided that proper attribution is given to the original author (Omar Hussein) and any research or publication using this code must cite this repository.
