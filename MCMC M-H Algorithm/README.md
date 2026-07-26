@@ -124,55 +124,69 @@ $$\tau = 1 + 2 \sum_{k=1}^{\infty} \rho(k)$$$$\text{True Variance} = \frac{\sigm
 ## Flowchart
 
 ```mermaid
-flowchart TD
-    Start([Start: MCMC_MH]) --> Input[/Input: log_f, x0, N, Sigma, K/]
-    Input --> Validate[Validate inputs: x0, N, K]
-    Validate --> Init[Initialize: D, B_size=1000, x_c=x0, log_f_c=log_f(x_c), T_burnSteps=0, batch_count=0]
-    Init --> SetTarget{D == 1?}
-    SetTarget -->|Yes| TargetLow[target_rate = 0.440]
-    SetTarget -->|No| TargetHigh[target_rate = 0.234]
 
-    TargetLow --> BurnLoop
-    TargetHigh --> BurnLoop
+flowchart LR
 
-    BurnLoop([Phase 1: Burn-In Loop]) --> ResetAcc[acc_count = 0]
-    ResetAcc --> BatchFor[For i = 1 to B_size]
-    BatchFor --> Propose[Propose x_n = x_c + randn*Sigma]
-    Propose --> EvalLogF[Evaluate log_f_n = log_f x_n]
-    EvalLogF --> AcceptCheck{log rand < log_f_n - log_f_c ?}
-    AcceptCheck -->|Yes| Accept[x_c = x_n, log_f_c = log_f_n, acc_count++]
-    AcceptCheck -->|No| Reject[Keep current x_c]
-    Accept --> StoreBatch[Store x_c in Temp_batch i]
-    Reject --> StoreBatch
-    StoreBatch --> BatchDone{i == B_size?}
-    BatchDone -->|No| BatchFor
-    BatchDone -->|Yes| UpdateCounters[T_burnSteps += B_size, batch_count++]
+    classDef startEnd fill:#2ecc71,stroke:#27ae60,color:#fff,stroke-width:2px
 
-    UpdateCounters --> ActualRate[actual_rate = acc_count / B_size]
-    ActualRate --> RM[Robbins-Monro update: gamma = 1/sqrt batch_count, Sigma = exp log Sigma + gamma * actual_rate - target_rate]
-    RM --> SplitBatch[Split batch: P_A first 10%, P_B last 50%]
-    SplitBatch --> Means[Compute mean_A, mean_B]
-    Means --> FFTVar[Compute sem_A, sem_B via FFT true variance]
-    FFTVar --> ZScore[Compute Z_scores = abs mean_A - mean_B / sqrt sem_A+sem_B+eps]
-    ZScore --> Converge{max Z_scores < 1.96?}
-    Converge -->|No| BurnLoop
-    Converge -->|Yes| BurnDone[Set Burn = true]
+    classDef io fill:#3498db,stroke:#2980b9,color:#fff,stroke-width:2px
 
-    BurnDone --> ProdInit[Phase 2: Init production, T_P_burnSteps = N*K, p_acc_count=0, sample_idx=1]
-    ProdInit --> ProdFor[For i = 1 to T_P_burnSteps]
-    ProdFor --> ProdPropose[Propose x_n = x_c + randn*Sigma frozen]
-    ProdPropose --> ProdEval[Evaluate log_f_n = log_f x_n]
-    ProdEval --> ProdAccept{log rand < log_f_n - log_f_c ?}
-    ProdAccept -->|Yes| ProdAcceptDo[x_c = x_n, log_f_c = log_f_n, p_acc_count++]
-    ProdAccept -->|No| ProdRejectDo[Keep current x_c]
-    ProdAcceptDo --> ThinCheck{mod i,K == 0 ?}
-    ProdRejectDo --> ThinCheck
-    ThinCheck -->|Yes| SaveSample[Save x_c to f_samples, sample_idx++]
-    ThinCheck -->|No| ProdLoopCheck
-    SaveSample --> ProdLoopCheck{i == T_P_burnSteps?}
-    ProdLoopCheck -->|No| ProdFor
-    ProdLoopCheck -->|Yes| Finalize[F_Sigma = Sigma, acc_rate = p_acc_count / T_P_burnSteps]
+    classDef process fill:#ecf0f1,stroke:#7f8c8d,color:#2c3e50,stroke-width:1px
 
-    Finalize --> Output[/Output: f_samples, F_Sigma, acc_rate, T_burnSteps/]
-    Output --> End([End])
+    classDef decision fill:#f39c12,stroke:#d35400,color:#fff,stroke-width:2px
+
+    classDef update fill:#9b59b6,stroke:#8e44ad,color:#fff,stroke-width:2px
+
+    classDef final fill:#e74c3c,stroke:#c0392b,color:#fff,stroke-width:2px
+
+    Start([Start]):::startEnd --> Input[/"log_f, x0, N, Sigma, K"/]:::io
+
+    Input --> Init["Init: D, x_c=x0, log_f_c, Burn=false"]:::process
+
+    Init --> SetTarget{"D==1?"}:::decision
+
+    SetTarget -->|Yes| TR1["target=0.440"]:::process
+
+    SetTarget -->|No| TR2["target=0.234"]:::process
+
+    subgraph Phase1[" Phase 1: Adaptive Burn-In"]
+
+        direction LR
+
+        TR1 --> BLoop["Run 1000-step batch\n(propose → accept/reject)"]:::process
+
+        TR2 --> BLoop
+
+        BLoop --> RM["Robbins-Monro:\nupdate Sigma"]:::update
+
+        RM --> Geweke["FFT Geweke Z-test\n(P_A vs P_B)"]:::process
+
+        Geweke --> Conv{"max|Z| < 1.96?"}:::decision
+
+        Conv -->|No| BLoop
+
+    end
+
+    Conv -->|Yes| Prod
+
+    subgraph Phase2["Phase 2: Production Sampling"]
+
+        direction LR
+
+        Prod["Run N*K steps\n(frozen Sigma)"]:::process --> Thin{"i mod K==0?"}:::decision
+
+        Thin -->|Yes| Save["Store sample"]:::process
+
+        Thin -->|No| Prod
+
+        Save --> Prod
+
+    end
+
+    Thin --> Finalize["Compute F_Sigma, acc_rate"]:::final
+
+    Finalize --> Output[/"f_samples, F_Sigma,\nacc_rate, T_burnSteps"/]:::io
+
+    Output --> End([End]):::startEnd
+
 ```
