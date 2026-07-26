@@ -120,3 +120,59 @@ $$\tau = 1 + 2 \sum_{k=1}^{\infty} \rho(k)$$$$\text{True Variance} = \frac{\sigm
 - MATLAB (R2016a or later recommended).
     
 - No external toolboxes are required. Core MATLAB functions (`fft`, `ifft`, `mean`, `var`) handle all advanced spectral computations.
+
+## Flowchart
+
+```mermaid
+flowchart TD
+    Start([Start: MCMC_MH]) --> Input[/Input: log_f, x0, N, Sigma, K/]
+    Input --> Validate[Validate inputs: x0, N, K]
+    Validate --> Init[Initialize: D, B_size=1000, x_c=x0, log_f_c=log_f(x_c), T_burnSteps=0, batch_count=0]
+    Init --> SetTarget{D == 1?}
+    SetTarget -->|Yes| TargetLow[target_rate = 0.440]
+    SetTarget -->|No| TargetHigh[target_rate = 0.234]
+
+    TargetLow --> BurnLoop
+    TargetHigh --> BurnLoop
+
+    BurnLoop([Phase 1: Burn-In Loop]) --> ResetAcc[acc_count = 0]
+    ResetAcc --> BatchFor[For i = 1 to B_size]
+    BatchFor --> Propose[Propose x_n = x_c + randn*Sigma]
+    Propose --> EvalLogF[Evaluate log_f_n = log_f x_n]
+    EvalLogF --> AcceptCheck{log rand < log_f_n - log_f_c ?}
+    AcceptCheck -->|Yes| Accept[x_c = x_n, log_f_c = log_f_n, acc_count++]
+    AcceptCheck -->|No| Reject[Keep current x_c]
+    Accept --> StoreBatch[Store x_c in Temp_batch i]
+    Reject --> StoreBatch
+    StoreBatch --> BatchDone{i == B_size?}
+    BatchDone -->|No| BatchFor
+    BatchDone -->|Yes| UpdateCounters[T_burnSteps += B_size, batch_count++]
+
+    UpdateCounters --> ActualRate[actual_rate = acc_count / B_size]
+    ActualRate --> RM[Robbins-Monro update: gamma = 1/sqrt batch_count, Sigma = exp log Sigma + gamma * actual_rate - target_rate]
+    RM --> SplitBatch[Split batch: P_A first 10%, P_B last 50%]
+    SplitBatch --> Means[Compute mean_A, mean_B]
+    Means --> FFTVar[Compute sem_A, sem_B via FFT true variance]
+    FFTVar --> ZScore[Compute Z_scores = abs mean_A - mean_B / sqrt sem_A+sem_B+eps]
+    ZScore --> Converge{max Z_scores < 1.96?}
+    Converge -->|No| BurnLoop
+    Converge -->|Yes| BurnDone[Set Burn = true]
+
+    BurnDone --> ProdInit[Phase 2: Init production, T_P_burnSteps = N*K, p_acc_count=0, sample_idx=1]
+    ProdInit --> ProdFor[For i = 1 to T_P_burnSteps]
+    ProdFor --> ProdPropose[Propose x_n = x_c + randn*Sigma frozen]
+    ProdPropose --> ProdEval[Evaluate log_f_n = log_f x_n]
+    ProdEval --> ProdAccept{log rand < log_f_n - log_f_c ?}
+    ProdAccept -->|Yes| ProdAcceptDo[x_c = x_n, log_f_c = log_f_n, p_acc_count++]
+    ProdAccept -->|No| ProdRejectDo[Keep current x_c]
+    ProdAcceptDo --> ThinCheck{mod i,K == 0 ?}
+    ProdRejectDo --> ThinCheck
+    ThinCheck -->|Yes| SaveSample[Save x_c to f_samples, sample_idx++]
+    ThinCheck -->|No| ProdLoopCheck
+    SaveSample --> ProdLoopCheck{i == T_P_burnSteps?}
+    ProdLoopCheck -->|No| ProdFor
+    ProdLoopCheck -->|Yes| Finalize[F_Sigma = Sigma, acc_rate = p_acc_count / T_P_burnSteps]
+
+    Finalize --> Output[/Output: f_samples, F_Sigma, acc_rate, T_burnSteps/]
+    Output --> End([End])
+```
