@@ -124,69 +124,40 @@ $$\tau = 1 + 2 \sum_{k=1}^{\infty} \rho(k)$$$$\text{True Variance} = \frac{\sigm
 ## Flowchart
 
 ```mermaid
-
-flowchart LR
-
+flowchart TB
     classDef startEnd fill:#2ecc71,stroke:#27ae60,color:#fff,stroke-width:2px
-
     classDef io fill:#3498db,stroke:#2980b9,color:#fff,stroke-width:2px
-
     classDef process fill:#ecf0f1,stroke:#7f8c8d,color:#2c3e50,stroke-width:1px
-
     classDef decision fill:#f39c12,stroke:#d35400,color:#fff,stroke-width:2px
-
     classDef update fill:#9b59b6,stroke:#8e44ad,color:#fff,stroke-width:2px
-
     classDef final fill:#e74c3c,stroke:#c0392b,color:#fff,stroke-width:2px
 
     Start([Start]):::startEnd --> Input[/"log_f, x0, N, Sigma, K"/]:::io
-
     Input --> Init["Init: D, x_c=x0, log_f_c, Burn=false"]:::process
-
     Init --> SetTarget{"D==1?"}:::decision
-
     SetTarget -->|Yes| TR1["target=0.440"]:::process
-
     SetTarget -->|No| TR2["target=0.234"]:::process
+    TR1 --> P1Start
+    TR2 --> P1Start
 
-    subgraph Phase1[" Phase 1: Adaptive Burn-In"]
-
+    subgraph Phase1["Phase 1: Adaptive Burn-In"]
         direction LR
+        P1Start["Run 1000-step batch"]:::process --> RM["Robbins-Monro:\nupdate Sigma"]:::update
+        RM --> Geweke["FFT Geweke\nZ-test"]:::process
+        Geweke --> Conv{"max|Z|\n< 1.96?"}:::decision
+        Conv -->|No| P1Start
+    end
 
-        TR1 --> BLoop["Run 1000-step batch\n(propose → accept/reject)"]:::process
-
-        TR2 --> BLoop
-
-        BLoop --> RM["Robbins-Monro:\nupdate Sigma"]:::update
-
-        RM --> Geweke["FFT Geweke Z-test\n(P_A vs P_B)"]:::process
-
-        Geweke --> Conv{"max|Z| < 1.96?"}:::decision
-
-        Conv -->|No| BLoop
-
+    subgraph Phase2["Phase 2: Production Sampling"]
+        direction LR
+        Prod["Run N*K steps\n(frozen Sigma)"]:::process --> Thin{"i mod K\n== 0?"}:::decision
+        Thin -->|Yes| Save["Store\nsample"]:::process
+        Thin -->|No| Prod
+        Save --> Prod
     end
 
     Conv -->|Yes| Prod
-
-    subgraph Phase2["Phase 2: Production Sampling"]
-
-        direction LR
-
-        Prod["Run N*K steps\n(frozen Sigma)"]:::process --> Thin{"i mod K==0?"}:::decision
-
-        Thin -->|Yes| Save["Store sample"]:::process
-
-        Thin -->|No| Prod
-
-        Save --> Prod
-
-    end
-
     Thin --> Finalize["Compute F_Sigma, acc_rate"]:::final
-
     Finalize --> Output[/"f_samples, F_Sigma,\nacc_rate, T_burnSteps"/]:::io
-
     Output --> End([End]):::startEnd
-
 ```
