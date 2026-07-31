@@ -123,9 +123,9 @@ Feynman_Jacobi(xa, xb, T, m, Vx, dVx, D, N, L, NO_Test, true, 'Harmonic Oscillat
 ```
 
 _Output Visualizations:_
-![Harmonic Oscillator Analysis](images/harmonic_analysis.png)
+![Harmonic Oscillator Analysis](images/harmonic_analysis.jpg)
 **Figure 1: Comprehensive HMC analysis for the Quantum Harmonic Oscillator.**
-![Harmonic Oscillator Analysis](images/harmonic_landscape.png)
+![Harmonic Oscillator Analysis](images/harmonic_landscape.jpg)
 **Figure 2: Potential landscape, 3D trajectory, and autocorrelation for the Harmonic Oscillator.**
 
 ### Example 2 (Medium): Symmetric Double-Well Potential
@@ -147,9 +147,9 @@ Feynman_Jacobi(xa, xb, T, m, Vx, dVx, D, N, L, NO_Test, true, 'Symmetric Double 
 ```
 
 _Output Visualizations:_
-![Symmetric Double-Well Potential](images/doublewell_analysis.png)
+![Symmetric Double-Well Potential](images/doublewell_analysis.jpg)
 **Figure 3: Instanton tunneling paths and HMC analysis for the Symmetric Double Well.**
-![Symmetric Double-Well Potential](images/doublewell_landscape.png)
+![Symmetric Double-Well Potential](images/doublewell_landscape.jpg)
 **Figure 4: Potential landscape, 3D trajectory, and autocorrelation for the Double Well.**
 
 ### Example 3 (Hard): Asymmetric Anharmonic Well
@@ -171,9 +171,9 @@ Feynman_Jacobi(xa, xb, T, m, Vx, dVx, D, N, L, NO_Test, true, 'Asymmetric Anharm
 ```
 
 _Output Visualizations:_
-![Asymmetric Anharmonic Well](images/asymmetric_analysis.png)
+![Asymmetric Anharmonic Well](images/asymmetric_analysis.jpg)
 **Figure 5: Complex dynamics and HMC analysis for the Asymmetric Anharmonic Well.**
-![Asymmetric Anharmonic Well](images/asymmetric_landscape.png)
+![Asymmetric Anharmonic Well](images/asymmetric_landscape.jpg)
 **Figure 6: Potential landscape, 3D trajectory, and autocorrelation for the Asymmetric Well.**
 
 ## Requirements
