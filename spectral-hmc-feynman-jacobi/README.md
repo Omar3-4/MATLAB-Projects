@@ -205,12 +205,17 @@ This code provides **numerical verification** (not analytical proof) of the Jaco
 
 ## References
 
-1. **Feynman, R. P.** "Space-Time Approach to Non-Relativistic Quantum Mechanics", *Reviews of Modern Physics* 20, 371 (1948).
-2. **Jacobi, C. G. J.** *Vorlesungen uber Dynamik* (1866, based on 1842 lectures), p. 44.
-3. **Omelyan, I. P., Mryglod, I. M., & Folk, R.** "Optimized leapfrog algorithms for classical molecular and spin dynamics simulations", *Physical Review E* 65, 056706 (2002).
-4. **Feynman, R. P., & Hibbs, A. R.** *Quantum Mechanics and Path Integrals* (McGraw-Hill, 1965), p. 71.
-5. **Wick, G. C.** "Properties of Bethe-Salpeter Wave Functions", *Physical Review* 96, 1126 (1954).
+1. **Feynman, R. P.** "Space-Time Approach to Non-Relativistic Quantum Mechanics", *Reviews of Modern Physics* 20, 367 (1948).
+2. **Feynman, R. P., & Hibbs, A. R.** *Quantum Mechanics and Path Integrals* (McGraw-Hill, 1965), p. 71.
+3. **Jacobi, C. G. J.** *Vorlesungen über Dynamik* (Reimer, Berlin, 1866, based on 1842 lectures), p. 44.
+4. **Wick, G. C.** "Properties of Bethe-Salpeter Wave Functions", *Physical Review* 96, 1126 (1954).
+5. **Gutzwiller, M. C.** *Chaos in Classical and Quantum Mechanics* (Springer-Verlag, 1990).
 6. **Metropolis, N., Rosenbluth, A. W., Rosenbluth, M. N., Teller, A. H., & Teller, E.** "Equation of State Calculations by Fast Computing Machines", *The Journal of Chemical Physics* 21, 1087 (1953).
+7. **Duane, S., Kennedy, A. D., Pendleton, B. J., & Roweth, D.** "Hybrid Monte Carlo", *Physics Letters B* 195, 216-222 (1987).
+8. **Omelyan, I. P., Mryglod, I. M., & Folk, R.** "Optimized leapfrog algorithms for classical molecular and spin dynamics simulations", *Physical Review E* 65, 056706 (2002).
+9. **Beskos, A., Pinski, F. J., Sanz-Serna, J. M., & Stuart, A. M.** "Hybrid Monte Carlo on Hilbert spaces", *Stochastic Processes and their Applications* 121, 2201 (2011).
+10. **Hoffman, M. D., & Gelman, A.** "The No-U-Turn Sampler: Adaptively Setting Path Lengths in Hamiltonian Monte Carlo", *Journal of Machine Learning Research* 15, 1593 (2014).
+11. **Gattringer, C., & Lang, C. B.** *Quantum Chromodynamics on the Lattice: An Introductory Presentation* (Springer, 2010).
 
 ## How to Cite
 
